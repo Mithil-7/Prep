@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>foundations // dsa roadmap</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0D12;
+    --panel:#11151C;
+    --panel-hover:#151A22;
+    --border:#1E242E;
+    --border-soft:#171C24;
+    --text:#E7EAEE;
+    --text-dim:#8B94A3;
+    --text-faint:#4B5563;
+    --green:#2ED573;
+    --amber:#F5A623;
+    --red:#FF5C5C;
+    --blue:#5B9DFF;
+    --purple:#B98CFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Mono', monospace;
+    min-height:100vh;
+    padding:0 0 80px 0;
+  }
+  .display{font-family:'Space Grotesk', sans-serif;}
+ 
+  .ticker{
+    border-bottom:1px solid var(--border);
+    background:var(--panel);
+    padding:10px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:11px;
+    letter-spacing:0.08em;
+    color:var(--text-dim);
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .ticker .seg{display:flex; align-items:center; gap:6px;}
+  .ticker .dot{width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:0.35;}}
+  .ticker b{color:var(--text); font-weight:600;}
+ 
+  .hero{
+    max-width:920px;
+    margin:0 auto;
+    padding:56px 24px 32px;
+  }
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:0.15em;
+    color:var(--blue);
+    margin-bottom:14px;
+    text-transform:uppercase;
+  }
+  h1{
+    font-size:clamp(36px,6vw,58px);
+    font-weight:700;
+    line-height:1.02;
+    letter-spacing:-0.02em;
+  }
+  h1 .fade{color:var(--text-faint);}
+  .sub{
+    color:var(--text-dim);
+    font-size:14px;
+    margin-top:16px;
+    max-width:600px;
+    line-height:1.6;
+  }
+ 
+  .graph-wrap{
+    max-width:920px;
+    margin:36px auto 0;
+    padding:0 24px;
+  }
+  .graph-panel{
+    border:1px solid var(--border);
+    background:var(--panel);
+    border-radius:6px;
+    padding:20px 20px 12px;
+  }
+  .graph-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:8px;
+  }
+  .graph-head .label{font-size:11px; color:var(--text-dim); letter-spacing:0.08em;}
+  .graph-head .val{font-family:'Space Grotesk'; font-size:22px; font-weight:600; color:var(--green);}
+  svg#ratingChart{width:100%; height:150px; display:block;}
+  .stat-row{
+    display:flex;
+    gap:0;
+    border-top:1px solid var(--border-soft);
+    margin-top:14px;
+  }
+  .stat{
+    flex:1;
+    padding:14px 4px 2px;
+    border-right:1px solid var(--border-soft);
+    text-align:center;
+  }
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:'Space Grotesk'; font-size:24px; font-weight:600;}
+  .stat .lbl{font-size:10px; color:var(--text-dim); letter-spacing:0.08em; margin-top:4px; text-transform:uppercase;}
+ 
+  .phase-header{
+    max-width:920px;
+    margin:36px auto 0;
+    padding:0 24px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .phase-header .line{flex:1; height:1px; background:var(--border);}
+  .phase-header .ptxt{
+    font-size:11px;
+    letter-spacing:0.12em;
+    color:var(--text-dim);
+    white-space:nowrap;
+  }
+  .phase-header .ptxt b{color:var(--text); font-weight:600;}
+ 
+  .days{
+    max-width:920px;
+    margin:14px auto 0;
+    padding:0 24px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .day{
+    border:1px solid var(--border);
+    background:var(--panel);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .day-head{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:14px 18px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .day-head:hover{background:var(--panel-hover);}
+  .day-num{
+    font-family:'Space Grotesk';
+    font-size:13px;
+    color:var(--text-faint);
+    width:48px;
+    flex-shrink:0;
+  }
+  .day-title{flex:1; min-width:160px;}
+  .day-title .name{font-family:'Space Grotesk'; font-size:15px; font-weight:600;}
+  .day-title .topic{font-size:11px; color:var(--text-dim); margin-top:2px;}
+  .day-bar{
+    width:90px;
+    height:4px;
+    background:var(--border-soft);
+    border-radius:2px;
+    overflow:hidden;
+    flex-shrink:0;
+  }
+  .day-bar-fill{height:100%; background:var(--green); width:0%; transition:width .3s ease;}
+  .day-count{font-size:11px; color:var(--text-dim); width:36px; text-align:right; flex-shrink:0;}
+  .chevron{color:var(--text-faint); transition:transform .2s ease; flex-shrink:0;}
+  .day.open .chevron{transform:rotate(90deg);}
+ 
+  .problems{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .3s ease;
+    border-top:1px solid var(--border-soft);
+  }
+  .day.open .problems{max-height:300px;}
+  .problem{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 18px;
+    border-bottom:1px solid var(--border-soft);
+    font-size:13px;
+  }
+  .problem:last-child{border-bottom:none;}
+  .check{
+    width:16px; height:16px;
+    border:1.5px solid var(--text-faint);
+    border-radius:3px;
+    flex-shrink:0;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:all .15s ease;
+  }
+  .check.checked{background:var(--green); border-color:var(--green);}
+  .check.checked::after{content:'✓'; font-size:11px; color:#0A0D12; font-weight:700;}
+  .plat{
+    font-size:9px;
+    padding:2px 6px;
+    border-radius:3px;
+    letter-spacing:0.05em;
+    flex-shrink:0;
+    font-weight:600;
+  }
+  .plat.LC{color:var(--blue); background:rgba(91,157,255,0.1);}
+  .plat.CC{color:var(--purple); background:rgba(185,140,255,0.1);}
+  .p-name{flex:1; color:var(--text);}
+  .p-name.done{color:var(--text-faint); text-decoration:line-through;}
+  .diff{
+    font-size:10px;
+    padding:2px 7px;
+    border-radius:3px;
+    letter-spacing:0.05em;
+    flex-shrink:0;
+  }
+  .diff.Easy{color:var(--green); background:rgba(46,213,115,0.1);}
+  .diff.Medium{color:var(--amber); background:rgba(245,166,35,0.1);}
+  .diff.Hard{color:var(--red); background:rgba(255,92,92,0.1);}
+  .p-link{
+    color:var(--blue);
+    text-decoration:none;
+    font-size:12px;
+    flex-shrink:0;
+    white-space:nowrap;
+    border-bottom:1px solid transparent;
+  }
+  .p-link:hover{border-bottom-color:var(--blue);}
+ 
+  footer{
+    max-width:920px;
+    margin:40px auto 0;
+    padding:20px 24px 0;
+    color:var(--text-faint);
+    font-size:11px;
+    text-align:center;
+    letter-spacing:0.05em;
+    line-height:1.8;
+  }
+  footer a{color:var(--text-faint);}
+ 
+  @media(max-width:560px){
+    .day-title{min-width:110px;}
+    .day-bar{display:none;}
+  }
+</style>
+</head>
+<body>
+ 
+<div class="ticker">
+  <div class="seg"><span class="dot"></span> <b id="tickPhase">PHASE 1 · LEETCODE</b></div>
+  <div class="seg" id="tickDay">DAY 001</div>
+  <div class="seg" id="tickProgress">SOLVED 0/50</div>
+</div>
+ 
+<div class="hero">
+  <div class="eyebrow">dsa roadmap — sde placements track</div>
+  <h1>Build the<br><span class="fade">engine.</span></h1>
+  <p class="sub">25 days, 50 problems, two a day. Arrays to intro DP on LeetCode, then a CodeChef practice block for raw input/output and math fluency. Check things off as you go, your line goes up.</p>
+</div>
+ 
+<div class="graph-wrap">
+  <div class="graph-panel">
+    <div class="graph-head">
+      <span class="label">RATING · CUMULATIVE PROGRESS</span>
+      <span class="val" id="graphVal">0%</span>
+    </div>
+    <svg id="ratingChart" viewBox="0 0 860 150" preserveAspectRatio="none"></svg>
+    <div class="stat-row">
+      <div class="stat"><div class="num" id="statSolved">0</div><div class="lbl">Solved</div></div>
+      <div class="stat"><div class="num" id="statStreak">0</div><div class="lbl">Day Streak</div></div>
+      <div class="stat"><div class="num" id="statDay">1</div><div class="lbl">Current Day</div></div>
+      <div class="stat"><div class="num" id="statRemain">50</div><div class="lbl">Remaining</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="phasesRoot"></div>
+ 
+<footer>started this cycle · reset anytime by clearing this artifact's storage · LC = LeetCode, CC = CodeChef</footer>
+ 
+<script>
+// Each entry: { n: name, d: difficulty, u: url, plat: 'LC'|'CC' }
+const DAYS = [
+  // ===== PHASE 1: LEETCODE FOUNDATIONS =====
+  { phase:"leetcode", topic:"Two pointers & sliding window", problems:[
+    {n:"Two Sum II — Input Array Is Sorted", d:"Easy", u:"https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/", plat:"LC"},
+    {n:"Valid Palindrome", d:"Easy", u:"https://leetcode.com/problems/valid-palindrome/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Two pointers & sliding window", problems:[
+    {n:"Container With Most Water", d:"Medium", u:"https://leetcode.com/problems/container-with-most-water/", plat:"LC"},
+    {n:"Best Time to Buy and Sell Stock", d:"Easy", u:"https://leetcode.com/problems/best-time-to-buy-and-sell-stock/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Sliding window & prefix sums", problems:[
+    {n:"Longest Substring Without Repeating Characters", d:"Medium", u:"https://leetcode.com/problems/longest-substring-without-repeating-characters/", plat:"LC"},
+    {n:"Running Sum of 1d Array", d:"Easy", u:"https://leetcode.com/problems/running-sum-of-1d-array/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Prefix sums → hashmaps", problems:[
+    {n:"Subarray Sum Equals K", d:"Medium", u:"https://leetcode.com/problems/subarray-sum-equals-k/", plat:"LC"},
+    {n:"Two Sum", d:"Easy", u:"https://leetcode.com/problems/two-sum/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Hashmaps & sets", problems:[
+    {n:"Group Anagrams", d:"Medium", u:"https://leetcode.com/problems/group-anagrams/", plat:"LC"},
+    {n:"Contains Duplicate", d:"Easy", u:"https://leetcode.com/problems/contains-duplicate/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Hashmaps & sets", problems:[
+    {n:"Top K Frequent Elements", d:"Medium", u:"https://leetcode.com/problems/top-k-frequent-elements/", plat:"LC"},
+    {n:"Longest Consecutive Sequence", d:"Medium", u:"https://leetcode.com/problems/longest-consecutive-sequence/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Linked lists", problems:[
+    {n:"Reverse Linked List", d:"Easy", u:"https://leetcode.com/problems/reverse-linked-list/", plat:"LC"},
+    {n:"Merge Two Sorted Lists", d:"Easy", u:"https://leetcode.com/problems/merge-two-sorted-lists/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Linked lists — fast/slow pointers", problems:[
+    {n:"Linked List Cycle", d:"Easy", u:"https://leetcode.com/problems/linked-list-cycle/", plat:"LC"},
+    {n:"Remove Nth Node From End of List", d:"Medium", u:"https://leetcode.com/problems/remove-nth-node-from-end-of-list/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Linked lists → stacks", problems:[
+    {n:"Reorder List", d:"Medium", u:"https://leetcode.com/problems/reorder-list/", plat:"LC"},
+    {n:"Valid Parentheses", d:"Easy", u:"https://leetcode.com/problems/valid-parentheses/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Stacks & monotonic stack", problems:[
+    {n:"Min Stack", d:"Medium", u:"https://leetcode.com/problems/min-stack/", plat:"LC"},
+    {n:"Daily Temperatures", d:"Medium", u:"https://leetcode.com/problems/daily-temperatures/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Queues → tree traversals", problems:[
+    {n:"Implement Queue using Stacks", d:"Easy", u:"https://leetcode.com/problems/implement-queue-using-stacks/", plat:"LC"},
+    {n:"Binary Tree Inorder Traversal", d:"Easy", u:"https://leetcode.com/problems/binary-tree-inorder-traversal/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Trees I — recursion basics", problems:[
+    {n:"Maximum Depth of Binary Tree", d:"Easy", u:"https://leetcode.com/problems/maximum-depth-of-binary-tree/", plat:"LC"},
+    {n:"Invert Binary Tree", d:"Easy", u:"https://leetcode.com/problems/invert-binary-tree/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Trees I → Trees II", problems:[
+    {n:"Same Tree", d:"Easy", u:"https://leetcode.com/problems/same-tree/", plat:"LC"},
+    {n:"Validate Binary Search Tree", d:"Medium", u:"https://leetcode.com/problems/validate-binary-search-tree/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Trees II — BST & BFS", problems:[
+    {n:"Lowest Common Ancestor of a BST", d:"Medium", u:"https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/", plat:"LC"},
+    {n:"Binary Tree Level Order Traversal", d:"Medium", u:"https://leetcode.com/problems/binary-tree-level-order-traversal/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Graphs — grid BFS/DFS", problems:[
+    {n:"Number of Islands", d:"Medium", u:"https://leetcode.com/problems/number-of-islands/", plat:"LC"},
+    {n:"Clone Graph", d:"Medium", u:"https://leetcode.com/problems/clone-graph/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Graphs → backtracking", problems:[
+    {n:"Course Schedule", d:"Medium", u:"https://leetcode.com/problems/course-schedule/", plat:"LC"},
+    {n:"Subsets", d:"Medium", u:"https://leetcode.com/problems/subsets/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Backtracking", problems:[
+    {n:"Permutations", d:"Medium", u:"https://leetcode.com/problems/permutations/", plat:"LC"},
+    {n:"Combination Sum", d:"Medium", u:"https://leetcode.com/problems/combination-sum/", plat:"LC"}
+  ]},
+  { phase:"leetcode", topic:"Intro DP", problems:[
+    {n:"Climbing Stairs", d:"Easy", u:"https://leetcode.com/problems/climbing-stairs/", plat:"LC"},
+    {n:"House Robber", d:"Medium", u:"https://leetcode.com/problems/house-robber/", plat:"LC"}
+  ]},
+
+  // ===== PHASE 2: CODECHEF PRACTICE (verified live problems) =====
+  { phase:"codechef", topic:"I/O basics", problems:[
+    {n:"Life, the Universe, and Everything", d:"Easy", u:"https://www.codechef.com/problems/TEST", plat:"CC"},
+    {n:"ATM", d:"Easy", u:"https://www.codechef.com/problems/HS08TEST", plat:"CC"}
+  ]},
+  { phase:"codechef", topic:"Fast I/O", problems:[
+    {n:"Enormous Input Test", d:"Easy", u:"https://www.codechef.com/problems/INTEST", plat:"CC"},
+    {n:"Add Two Numbers", d:"Easy", u:"https://www.codechef.com/problems/FLOW001", plat:"CC"}
+  ]},
+  { phase:"codechef", topic:"Basic math", problems:[
+    {n:"Find Remainder", d:"Easy", u:"https://www.codechef.com/problems/FLOW002", plat:"CC"},
+    {n:"First and Last Digit", d:"Easy", u:"https://www.codechef.com/problems/FLOW004", plat:"CC"}
+  ]},
+  { phase:"codechef", topic:"Digits & number manipulation", problems:[
+    {n:"Sum of Digits", d:"Easy", u:"https://www.codechef.com/problems/FLOW006", plat:"CC"},
+    {n:"Reverse The Number", d:"Easy", u:"https://www.codechef.com/problems/FLOW007", plat:"CC"}
+  ]},
+  { phase:"codechef", topic:"Number theory basics", problems:[
+    {n:"Number Mirror", d:"Easy", u:"https://www.codechef.com/problems/START01", plat:"CC"},
+    {n:"Small Factorials", d:"Easy", u:"https://www.codechef.com/problems/FCTRL2", plat:"CC"}
+  ]},
+  { phase:"codechef", topic:"Number theory basics", problems:[
+    {n:"Factorial", d:"Easy", u:"https://www.codechef.com/problems/FCTRL", plat:"CC"},
+    {n:"Finding Square Roots", d:"Easy", u:"https://www.codechef.com/problems/FSQRT", plat:"CC"}
+  ]},
+  { phase:"codechef", topic:"Loops & sieve intro", problems:[
+    {n:"Lucky Four", d:"Easy", u:"https://www.codechef.com/problems/LUCKFOUR", plat:"CC"},
+    {n:"Prime Generator", d:"Medium", u:"https://www.codechef.com/problems/PRIME1", plat:"CC"}
+  ]}
+];
+
+const TOTAL = DAYS.reduce((s,day)=>s+day.problems.length, 0);
+let checked = {};
+let startDate = null;
+let lastActiveDate = null;
+let streak = 0;
+ 
+function pid(di, pi){ return di+'-'+pi; }
+ 
+async function loadState(){
+  try{
+    const res = await window.storage.get('roadmap-progress-v2');
+    if(res && res.value){
+      const parsed = JSON.parse(res.value);
+      checked = parsed.checked || {};
+      startDate = parsed.startDate || null;
+      lastActiveDate = parsed.lastActiveDate || null;
+      streak = parsed.streak || 0;
+    }
+  }catch(e){ /* no saved state yet */ }
+ 
+  const today = new Date().toISOString().slice(0,10);
+  if(!startDate){ startDate = today; }
+  if(lastActiveDate !== today){
+    const y = new Date(); y.setDate(y.getDate()-1);
+    const yStr = y.toISOString().slice(0,10);
+    streak = (lastActiveDate === yStr) ? streak + 1 : (lastActiveDate ? 1 : 1);
+    lastActiveDate = today;
+    saveState();
+  }
+}
+ 
+async function saveState(){
+  try{
+    await window.storage.set('roadmap-progress-v2', JSON.stringify({checked, startDate, lastActiveDate, streak}));
+  }catch(e){ /* storage unavailable, state stays in memory this session */ }
+}
+
+function phaseLabel(phase){
+  return phase === "leetcode" ? "PHASE 1 · LEETCODE FOUNDATIONS" : "PHASE 2 · CODECHEF PRACTICE";
+}
+ 
+function render(){
+  const root = document.getElementById('phasesRoot');
+  root.innerHTML = '';
+  let currentPhase = null;
+  let dayCounter = 0;
+
+  DAYS.forEach((day, di)=>{
+    if(day.phase !== currentPhase){
+      currentPhase = day.phase;
+      const header = document.createElement('div');
+      header.className = 'phase-header';
+      header.innerHTML = `<span class="ptxt"><b>${phaseLabel(currentPhase)}</b></span><span class="line"></span>`;
+      root.appendChild(header);
+      const wrap = document.createElement('div');
+      wrap.className = 'days';
+      wrap.id = 'phase-'+currentPhase;
+      root.appendChild(wrap);
+    }
+    dayCounter++;
+    const container = document.getElementById('phase-'+currentPhase);
+
+    const solvedCount = day.problems.filter((_,pi)=>checked[pid(di,pi)]).length;
+    const pct = Math.round(100*solvedCount/day.problems.length);
+ 
+    const dayEl = document.createElement('div');
+    dayEl.className = 'day';
+    dayEl.id = 'day-'+di;
+ 
+    const head = document.createElement('div');
+    head.className = 'day-head';
+    head.innerHTML = `
+      <div class="day-num">D${String(dayCounter).padStart(2,'0')}</div>
+      <div class="day-title">
+        <div class="name">Day ${dayCounter}</div>
+        <div class="topic">${day.topic}</div>
+      </div>
+      <div class="day-bar"><div class="day-bar-fill" style="width:${pct}%"></div></div>
+      <div class="day-count">${solvedCount}/${day.problems.length}</div>
+      <div class="chevron">›</div>
+    `;
+    head.onclick = ()=> dayEl.classList.toggle('open');
+    dayEl.appendChild(head);
+ 
+    const probWrap = document.createElement('div');
+    probWrap.className = 'problems';
+    day.problems.forEach((p, pi)=>{
+      const id = pid(di,pi);
+      const isChecked = !!checked[id];
+      const row = document.createElement('div');
+      row.className = 'problem';
+      row.innerHTML = `
+        <div class="check ${isChecked?'checked':''}" data-id="${id}"></div>
+        <div class="plat ${p.plat}">${p.plat}</div>
+        <div class="p-name ${isChecked?'done':''}">${p.n}</div>
+        <div class="diff ${p.d}">${p.d.toUpperCase()}</div>
+        <a class="p-link" href="${p.u}" target="_blank" rel="noopener">open ↗</a>
+      `;
+      row.querySelector('.check').onclick = (e)=>{
+        e.stopPropagation();
+        checked[id] = !checked[id];
+        saveState();
+        render();
+      };
+      probWrap.appendChild(row);
+    });
+    dayEl.appendChild(probWrap);
+    container.appendChild(dayEl);
+  });
+ 
+  // auto-open the first day with unfinished problems
+  const firstOpenIdx = DAYS.findIndex((d,di)=> d.problems.some((_,pi)=>!checked[pid(di,pi)]));
+  const targetIdx = firstOpenIdx === -1 ? 0 : firstOpenIdx;
+  const target = document.getElementById('day-'+targetIdx);
+  if(target) target.classList.add('open');
+
+  document.getElementById('tickPhase').textContent = phaseLabel(DAYS[targetIdx].phase);
+ 
+  updateStats();
+  drawChart();
+}
+ 
+function updateStats(){
+  const solvedTotal = Object.values(checked).filter(Boolean).length;
+  const pctTotal = Math.round(100*solvedTotal/TOTAL);
+  const currentDayIdx = DAYS.findIndex((d,di)=> d.problems.some((_,pi)=>!checked[pid(di,pi)]));
+  const dayDisplay = currentDayIdx === -1 ? DAYS.length : currentDayIdx+1;
+ 
+  const day = startDate ? Math.max(1, Math.floor((new Date()-new Date(startDate))/86400000)+1) : 1;
+ 
+  document.getElementById('tickDay').textContent = 'DAY ' + String(day).padStart(3,'0');
+  document.getElementById('tickProgress').textContent = 'SOLVED ' + solvedTotal + '/' + TOTAL;
+  document.getElementById('graphVal').textContent = pctTotal + '%';
+  document.getElementById('statSolved').textContent = solvedTotal;
+  document.getElementById('statStreak').textContent = streak;
+  document.getElementById('statDay').textContent = dayDisplay;
+  document.getElementById('statRemain').textContent = TOTAL - solvedTotal;
+}
+ 
+function drawChart(){
+  const svg = document.getElementById('ratingChart');
+  const W = 860, H = 150, pad = 10;
+  let cum = 0;
+  const points = [ {x:0, y:0} ];
+  DAYS.forEach((day, di)=>{
+    day.problems.forEach((_, pi)=>{
+      if(checked[pid(di,pi)]) cum++;
+    });
+    points.push({x: (di+1)/DAYS.length, y: cum/TOTAL});
+  });
+ 
+  const coords = points.map(p=>{
+    const x = pad + p.x*(W-2*pad);
+    const y = H-pad - p.y*(H-2*pad);
+    return [x,y];
+  });
+ 
+  let path = 'M ' + coords[0][0] + ' ' + coords[0][1];
+  for(let i=1;i<coords.length;i++){ path += ' L ' + coords[i][0] + ' ' + coords[i][1]; }
+ 
+  const areaPath = path + ` L ${coords[coords.length-1][0]} ${H-pad} L ${coords[0][0]} ${H-pad} Z`;
+  const last = coords[coords.length-1];
+ 
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#2ED573" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#2ED573" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    ${[0.25,0.5,0.75].map(f=>`<line x1="0" y1="${H-pad-f*(H-2*pad)}" x2="${W}" y2="${H-pad-f*(H-2*pad)}" stroke="#1E242E" stroke-width="1"/>`).join('')}
+    <path d="${areaPath}" fill="url(#fillGrad)" stroke="none"/>
+    <path d="${path}" fill="none" stroke="#2ED573" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${last[0]}" cy="${last[1]}" r="5" fill="#2ED573"/>
+    <circle cx="${last[0]}" cy="${last[1]}" r="9" fill="#2ED573" opacity="0.25"/>
+  `;
+}
+ 
+(async ()=>{
+  await loadState();
+  render();
+})();
+</script>
+ 
+</body>
+</html>
