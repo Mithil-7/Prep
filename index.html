@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" type="image/png" href="Assets/favicon.ico">
-<title>foundations // dsa roadmap</title>
+<title>foundations // sde + quant prep</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -22,6 +21,7 @@
     --red:#FF5C5C;
     --blue:#5B9DFF;
     --purple:#B98CFF;
+    --pink:#FF6FA8;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
@@ -32,7 +32,7 @@
     padding:0 0 80px 0;
   }
   .display{font-family:'Space Grotesk', sans-serif;}
- 
+
   .ticker{
     border-bottom:1px solid var(--border);
     background:var(--panel);
@@ -45,16 +45,25 @@
     color:var(--text-dim);
     flex-wrap:wrap;
     gap:8px;
+    position:sticky;
+    top:0;
+    z-index:20;
   }
   .ticker .seg{display:flex; align-items:center; gap:6px;}
   .ticker .dot{width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 2s infinite;}
   @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:0.35;}}
   .ticker b{color:var(--text); font-weight:600;}
- 
+  .ticker .resetBtn{
+    background:none; border:1px solid var(--border-soft); color:var(--text-faint);
+    font-family:inherit; font-size:10px; padding:4px 8px; border-radius:4px; cursor:pointer;
+    letter-spacing:0.05em;
+  }
+  .ticker .resetBtn:hover{color:var(--red); border-color:var(--red);}
+
   .hero{
-    max-width:920px;
+    max-width:960px;
     margin:0 auto;
-    padding:56px 24px 32px;
+    padding:48px 24px 28px;
   }
   .eyebrow{
     font-size:11px;
@@ -64,9 +73,9 @@
     text-transform:uppercase;
   }
   h1{
-    font-size:clamp(36px,6vw,58px);
+    font-size:clamp(32px,5.5vw,52px);
     font-weight:700;
-    line-height:1.02;
+    line-height:1.03;
     letter-spacing:-0.02em;
   }
   h1 .fade{color:var(--text-faint);}
@@ -74,13 +83,26 @@
     color:var(--text-dim);
     font-size:14px;
     margin-top:16px;
-    max-width:600px;
+    max-width:640px;
     line-height:1.6;
   }
- 
+  .storage-note{
+    max-width:640px;
+    margin-top:14px;
+    padding:10px 12px;
+    border:1px solid var(--border);
+    border-left:2px solid var(--amber);
+    background:var(--panel);
+    font-size:11.5px;
+    color:var(--text-dim);
+    line-height:1.6;
+    border-radius:4px;
+  }
+  .storage-note b{color:var(--text);}
+
   .graph-wrap{
-    max-width:920px;
-    margin:36px auto 0;
+    max-width:960px;
+    margin:32px auto 0;
     padding:0 24px;
   }
   .graph-panel{
@@ -97,44 +119,88 @@
   }
   .graph-head .label{font-size:11px; color:var(--text-dim); letter-spacing:0.08em;}
   .graph-head .val{font-family:'Space Grotesk'; font-size:22px; font-weight:600; color:var(--green);}
-  svg#ratingChart{width:100%; height:150px; display:block;}
+  svg#ratingChart{width:100%; height:140px; display:block;}
   .stat-row{
     display:flex;
     gap:0;
     border-top:1px solid var(--border-soft);
     margin-top:14px;
+    flex-wrap:wrap;
   }
   .stat{
     flex:1;
+    min-width:80px;
     padding:14px 4px 2px;
     border-right:1px solid var(--border-soft);
     text-align:center;
   }
   .stat:last-child{border-right:none;}
-  .stat .num{font-family:'Space Grotesk'; font-size:24px; font-weight:600;}
+  .stat .num{font-family:'Space Grotesk'; font-size:22px; font-weight:600;}
   .stat .lbl{font-size:10px; color:var(--text-dim); letter-spacing:0.08em; margin-top:4px; text-transform:uppercase;}
- 
-  .phase-header{
-    max-width:920px;
-    margin:36px auto 0;
+
+  /* tabs */
+  .tabbar{
+    max-width:960px;
+    margin:28px auto 0;
     padding:0 24px;
     display:flex;
-    align-items:center;
-    gap:12px;
+    gap:8px;
+    flex-wrap:wrap;
   }
-  .phase-header .line{flex:1; height:1px; background:var(--border);}
-  .phase-header .ptxt{
-    font-size:11px;
-    letter-spacing:0.12em;
+  .tab-btn{
+    font-family:'IBM Plex Mono', monospace;
+    background:var(--panel);
+    border:1px solid var(--border);
     color:var(--text-dim);
+    padding:10px 14px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:12px;
+    letter-spacing:0.03em;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:all .15s ease;
+  }
+  .tab-btn:hover{color:var(--text); border-color:#2a323f;}
+  .tab-btn.active{color:var(--bg); background:var(--text); border-color:var(--text); font-weight:600;}
+  .tab-btn .count{
+    font-size:10px;
+    opacity:0.7;
+  }
+  .tab-btn.active .count{opacity:0.6;}
+
+  .panel{display:none; max-width:960px; margin:0 auto; padding:0 24px;}
+  .panel.active{display:block;}
+
+  .contest-card{
+    border:1px solid var(--border);
+    background:var(--panel);
+    border-radius:6px;
+    padding:16px 18px;
+    margin:20px 0 6px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .contest-card .cc-left{flex:1; min-width:220px;}
+  .contest-card .cc-label{font-size:10px; letter-spacing:0.1em; color:var(--text-faint); text-transform:uppercase; margin-bottom:4px;}
+  .contest-card .cc-body{font-size:12.5px; color:var(--text-dim); line-height:1.6;}
+  .contest-card a.cc-link{
+    color:var(--blue);
+    text-decoration:none;
+    font-size:12px;
+    border:1px solid var(--border-soft);
+    padding:8px 14px;
+    border-radius:5px;
     white-space:nowrap;
   }
-  .phase-header .ptxt b{color:var(--text); font-weight:600;}
- 
+  .contest-card a.cc-link:hover{border-color:var(--blue);}
+
   .days{
-    max-width:920px;
-    margin:14px auto 0;
-    padding:0 24px;
+    margin:14px 0 0;
     display:flex;
     flex-direction:column;
     gap:10px;
@@ -161,7 +227,7 @@
     width:48px;
     flex-shrink:0;
   }
-  .day-title{flex:1; min-width:160px;}
+  .day-title{flex:1; min-width:140px;}
   .day-title .name{font-family:'Space Grotesk'; font-size:15px; font-weight:600;}
   .day-title .topic{font-size:11px; color:var(--text-dim); margin-top:2px;}
   .day-bar{
@@ -176,7 +242,7 @@
   .day-count{font-size:11px; color:var(--text-dim); width:36px; text-align:right; flex-shrink:0;}
   .chevron{color:var(--text-faint); transition:transform .2s ease; flex-shrink:0;}
   .day.open .chevron{transform:rotate(90deg);}
- 
+
   .problems{
     max-height:0;
     overflow:hidden;
@@ -204,16 +270,6 @@
   }
   .check.checked{background:var(--green); border-color:var(--green);}
   .check.checked::after{content:'✓'; font-size:11px; color:#0A0D12; font-weight:700;}
-  .plat{
-    font-size:9px;
-    padding:2px 6px;
-    border-radius:3px;
-    letter-spacing:0.05em;
-    flex-shrink:0;
-    font-weight:600;
-  }
-  .plat.LC{color:var(--blue); background:rgba(91,157,255,0.1);}
-  .plat.CC{color:var(--purple); background:rgba(185,140,255,0.1);}
   .p-name{flex:1; color:var(--text);}
   .p-name.done{color:var(--text-faint); text-decoration:line-through;}
   .diff{
@@ -235,10 +291,79 @@
     border-bottom:1px solid transparent;
   }
   .p-link:hover{border-bottom-color:var(--blue);}
- 
+
+  /* quant tab */
+  .section-label{
+    font-size:11px; letter-spacing:0.12em; color:var(--text-dim); text-transform:uppercase;
+    margin:26px 0 12px;
+  }
+  .concept-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+    gap:10px;
+  }
+  .concept-card{
+    border:1px solid var(--border);
+    background:var(--panel);
+    border-radius:6px;
+    padding:14px 16px;
+  }
+  .concept-card .ct{font-family:'Space Grotesk'; font-size:13.5px; font-weight:600; color:var(--purple); margin-bottom:6px;}
+  .concept-card .cb{font-size:12px; color:var(--text-dim); line-height:1.6;}
+
+  .puzzle{
+    border:1px solid var(--border);
+    background:var(--panel);
+    border-radius:6px;
+    padding:16px 18px;
+    margin-bottom:10px;
+  }
+  .puzzle-head{display:flex; align-items:flex-start; gap:12px;}
+  .puzzle-head .check{margin-top:3px;}
+  .puzzle-tag{
+    font-size:9px;
+    padding:2px 7px;
+    border-radius:3px;
+    letter-spacing:0.05em;
+    background:rgba(185,140,255,0.1);
+    color:var(--purple);
+    flex-shrink:0;
+    text-transform:uppercase;
+    margin-top:1px;
+  }
+  .puzzle-prompt{flex:1; font-size:13.5px; line-height:1.6; color:var(--text);}
+  .puzzle-prompt .pname{font-family:'Space Grotesk'; font-weight:600; display:block; margin-bottom:4px;}
+  .reveal-btn{
+    margin-top:10px;
+    background:none;
+    border:1px solid var(--border-soft);
+    color:var(--blue);
+    font-family:inherit;
+    font-size:11px;
+    padding:6px 12px;
+    border-radius:5px;
+    cursor:pointer;
+    letter-spacing:0.03em;
+  }
+  .reveal-btn:hover{border-color:var(--blue);}
+  .puzzle-answer{
+    display:none;
+    margin-top:12px;
+    padding:12px 14px;
+    background:var(--bg);
+    border:1px solid var(--border-soft);
+    border-left:2px solid var(--green);
+    border-radius:4px;
+    font-size:12.5px;
+    color:var(--text-dim);
+    line-height:1.65;
+  }
+  .puzzle-answer.shown{display:block;}
+  .puzzle.solved{border-color:rgba(46,213,115,0.35);}
+
   footer{
-    max-width:920px;
-    margin:40px auto 0;
+    max-width:960px;
+    margin:44px auto 0;
     padding:20px 24px 0;
     color:var(--text-faint);
     font-size:11px;
@@ -247,7 +372,7 @@
     line-height:1.8;
   }
   footer a{color:var(--text-faint);}
- 
+
   @media(max-width:560px){
     .day-title{min-width:110px;}
     .day-bar{display:none;}
@@ -255,167 +380,337 @@
 </style>
 </head>
 <body>
- 
+
 <div class="ticker">
-  <div class="seg"><span class="dot"></span> <b id="tickPhase">PHASE 1 · LEETCODE</b></div>
+  <div class="seg"><span class="dot"></span> <b id="tickPhase">SDE + QUANT PREP</b></div>
   <div class="seg" id="tickDay">DAY 001</div>
-  <div class="seg" id="tickProgress">SOLVED 0/50</div>
+  <div class="seg" id="tickProgress">SOLVED 0/86</div>
+  <button class="resetBtn" id="resetBtn">reset progress</button>
 </div>
- 
+
 <div class="hero">
-  <div class="eyebrow">dsa roadmap — sde placements track</div>
+  <div class="eyebrow">dsa + quant roadmap — sde placements track</div>
   <h1>Build the<br><span class="fade">engine.</span></h1>
-  <p class="sub">25 days, 50 problems, two a day. Arrays to intro DP on LeetCode, then a CodeChef practice block for raw input/output and math fluency. Check things off as you go, your line goes up.</p>
+  <p class="sub">86 curated coding problems across LeetCode, CodeChef, Codeforces &amp; HackerRank — two a day — plus a standing contest calendar for each platform, and a quant track of puzzles and core concepts for markets/trading interviews.</p>
+  <div class="storage-note">
+    <b>On progress saving:</b> this page saves your checkmarks in this browser's local storage, so they'll be there next time you open <i>this same file in this same browser</i>. It won't sync across devices, and clearing browser data or opening a fresh copy of the file will reset it — bookmark or keep this exact file/tab if you want it to stick.
+  </div>
 </div>
- 
+
 <div class="graph-wrap">
   <div class="graph-panel">
     <div class="graph-head">
-      <span class="label">RATING · CUMULATIVE PROGRESS</span>
+      <span class="label">RATING · CUMULATIVE PROGRESS (ALL PLATFORMS)</span>
       <span class="val" id="graphVal">0%</span>
     </div>
-    <svg id="ratingChart" viewBox="0 0 860 150" preserveAspectRatio="none"></svg>
+    <svg id="ratingChart" viewBox="0 0 860 140" preserveAspectRatio="none"></svg>
     <div class="stat-row">
       <div class="stat"><div class="num" id="statSolved">0</div><div class="lbl">Solved</div></div>
       <div class="stat"><div class="num" id="statStreak">0</div><div class="lbl">Day Streak</div></div>
-      <div class="stat"><div class="num" id="statDay">1</div><div class="lbl">Current Day</div></div>
-      <div class="stat"><div class="num" id="statRemain">50</div><div class="lbl">Remaining</div></div>
+      <div class="stat"><div class="num" id="statRemain">86</div><div class="lbl">Remaining</div></div>
+      <div class="stat"><div class="num" id="statPuzzles">0/16</div><div class="lbl">Quant Puzzles</div></div>
     </div>
   </div>
 </div>
 
-<div id="phasesRoot"></div>
- 
-<footer>started this cycle · reset anytime by clearing this artifact's storage · LC = LeetCode, CC = CodeChef</footer>
- 
-<script>
-// Each entry: { n: name, d: difficulty, u: url, plat: 'LC'|'CC' }
-const DAYS = [
-  // ===== PHASE 1: LEETCODE FOUNDATIONS =====
-  { phase:"leetcode", topic:"Two pointers & sliding window", problems:[
-    {n:"Two Sum II — Input Array Is Sorted", d:"Easy", u:"https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/", plat:"LC"},
-    {n:"Valid Palindrome", d:"Easy", u:"https://leetcode.com/problems/valid-palindrome/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Two pointers & sliding window", problems:[
-    {n:"Container With Most Water", d:"Medium", u:"https://leetcode.com/problems/container-with-most-water/", plat:"LC"},
-    {n:"Best Time to Buy and Sell Stock", d:"Easy", u:"https://leetcode.com/problems/best-time-to-buy-and-sell-stock/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Sliding window & prefix sums", problems:[
-    {n:"Longest Substring Without Repeating Characters", d:"Medium", u:"https://leetcode.com/problems/longest-substring-without-repeating-characters/", plat:"LC"},
-    {n:"Running Sum of 1d Array", d:"Easy", u:"https://leetcode.com/problems/running-sum-of-1d-array/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Prefix sums → hashmaps", problems:[
-    {n:"Subarray Sum Equals K", d:"Medium", u:"https://leetcode.com/problems/subarray-sum-equals-k/", plat:"LC"},
-    {n:"Two Sum", d:"Easy", u:"https://leetcode.com/problems/two-sum/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Hashmaps & sets", problems:[
-    {n:"Group Anagrams", d:"Medium", u:"https://leetcode.com/problems/group-anagrams/", plat:"LC"},
-    {n:"Contains Duplicate", d:"Easy", u:"https://leetcode.com/problems/contains-duplicate/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Hashmaps & sets", problems:[
-    {n:"Top K Frequent Elements", d:"Medium", u:"https://leetcode.com/problems/top-k-frequent-elements/", plat:"LC"},
-    {n:"Longest Consecutive Sequence", d:"Medium", u:"https://leetcode.com/problems/longest-consecutive-sequence/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Linked lists", problems:[
-    {n:"Reverse Linked List", d:"Easy", u:"https://leetcode.com/problems/reverse-linked-list/", plat:"LC"},
-    {n:"Merge Two Sorted Lists", d:"Easy", u:"https://leetcode.com/problems/merge-two-sorted-lists/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Linked lists — fast/slow pointers", problems:[
-    {n:"Linked List Cycle", d:"Easy", u:"https://leetcode.com/problems/linked-list-cycle/", plat:"LC"},
-    {n:"Remove Nth Node From End of List", d:"Medium", u:"https://leetcode.com/problems/remove-nth-node-from-end-of-list/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Linked lists → stacks", problems:[
-    {n:"Reorder List", d:"Medium", u:"https://leetcode.com/problems/reorder-list/", plat:"LC"},
-    {n:"Valid Parentheses", d:"Easy", u:"https://leetcode.com/problems/valid-parentheses/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Stacks & monotonic stack", problems:[
-    {n:"Min Stack", d:"Medium", u:"https://leetcode.com/problems/min-stack/", plat:"LC"},
-    {n:"Daily Temperatures", d:"Medium", u:"https://leetcode.com/problems/daily-temperatures/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Queues → tree traversals", problems:[
-    {n:"Implement Queue using Stacks", d:"Easy", u:"https://leetcode.com/problems/implement-queue-using-stacks/", plat:"LC"},
-    {n:"Binary Tree Inorder Traversal", d:"Easy", u:"https://leetcode.com/problems/binary-tree-inorder-traversal/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Trees I — recursion basics", problems:[
-    {n:"Maximum Depth of Binary Tree", d:"Easy", u:"https://leetcode.com/problems/maximum-depth-of-binary-tree/", plat:"LC"},
-    {n:"Invert Binary Tree", d:"Easy", u:"https://leetcode.com/problems/invert-binary-tree/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Trees I → Trees II", problems:[
-    {n:"Same Tree", d:"Easy", u:"https://leetcode.com/problems/same-tree/", plat:"LC"},
-    {n:"Validate Binary Search Tree", d:"Medium", u:"https://leetcode.com/problems/validate-binary-search-tree/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Trees II — BST & BFS", problems:[
-    {n:"Lowest Common Ancestor of a BST", d:"Medium", u:"https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/", plat:"LC"},
-    {n:"Binary Tree Level Order Traversal", d:"Medium", u:"https://leetcode.com/problems/binary-tree-level-order-traversal/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Graphs — grid BFS/DFS", problems:[
-    {n:"Number of Islands", d:"Medium", u:"https://leetcode.com/problems/number-of-islands/", plat:"LC"},
-    {n:"Clone Graph", d:"Medium", u:"https://leetcode.com/problems/clone-graph/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Graphs → backtracking", problems:[
-    {n:"Course Schedule", d:"Medium", u:"https://leetcode.com/problems/course-schedule/", plat:"LC"},
-    {n:"Subsets", d:"Medium", u:"https://leetcode.com/problems/subsets/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Backtracking", problems:[
-    {n:"Permutations", d:"Medium", u:"https://leetcode.com/problems/permutations/", plat:"LC"},
-    {n:"Combination Sum", d:"Medium", u:"https://leetcode.com/problems/combination-sum/", plat:"LC"}
-  ]},
-  { phase:"leetcode", topic:"Intro DP", problems:[
-    {n:"Climbing Stairs", d:"Easy", u:"https://leetcode.com/problems/climbing-stairs/", plat:"LC"},
-    {n:"House Robber", d:"Medium", u:"https://leetcode.com/problems/house-robber/", plat:"LC"}
-  ]},
+<div class="tabbar" id="tabbar"></div>
+<div id="panelsRoot"></div>
 
-  // ===== PHASE 2: CODECHEF PRACTICE (verified live problems) =====
-  { phase:"codechef", topic:"I/O basics", problems:[
-    {n:"Life, the Universe, and Everything", d:"Easy", u:"https://www.codechef.com/problems/TEST", plat:"CC"},
-    {n:"ATM", d:"Easy", u:"https://www.codechef.com/problems/HS08TEST", plat:"CC"}
-  ]},
-  { phase:"codechef", topic:"Fast I/O", problems:[
-    {n:"Enormous Input Test", d:"Easy", u:"https://www.codechef.com/problems/INTEST", plat:"CC"},
-    {n:"Add Two Numbers", d:"Easy", u:"https://www.codechef.com/problems/FLOW001", plat:"CC"}
-  ]},
-  { phase:"codechef", topic:"Basic math", problems:[
-    {n:"Find Remainder", d:"Easy", u:"https://www.codechef.com/problems/FLOW002", plat:"CC"},
-    {n:"First and Last Digit", d:"Easy", u:"https://www.codechef.com/problems/FLOW004", plat:"CC"}
-  ]},
-  { phase:"codechef", topic:"Digits & number manipulation", problems:[
-    {n:"Sum of Digits", d:"Easy", u:"https://www.codechef.com/problems/FLOW006", plat:"CC"},
-    {n:"Reverse The Number", d:"Easy", u:"https://www.codechef.com/problems/FLOW007", plat:"CC"}
-  ]},
-  { phase:"codechef", topic:"Number theory basics", problems:[
-    {n:"Number Mirror", d:"Easy", u:"https://www.codechef.com/problems/START01", plat:"CC"},
-    {n:"Small Factorials", d:"Easy", u:"https://www.codechef.com/problems/FCTRL2", plat:"CC"}
-  ]},
-  { phase:"codechef", topic:"Number theory basics", problems:[
-    {n:"Factorial", d:"Easy", u:"https://www.codechef.com/problems/FCTRL", plat:"CC"},
-    {n:"Finding Square Roots", d:"Easy", u:"https://www.codechef.com/problems/FSQRT", plat:"CC"}
-  ]},
-  { phase:"codechef", topic:"Loops & sieve intro", problems:[
-    {n:"Lucky Four", d:"Easy", u:"https://www.codechef.com/problems/LUCKFOUR", plat:"CC"},
-    {n:"Prime Generator", d:"Medium", u:"https://www.codechef.com/problems/PRIME1", plat:"CC"}
-  ]}
+<footer>started this cycle · progress lives in this browser's local storage only · reset anytime with the button up top</footer>
+
+<script>
+/* ============ DATA ============ */
+
+const TRACKS = {
+leetcode: {
+  label:"LeetCode", key:"leetcode",
+  contest:{ body:"Weekly Contest runs every Sunday, Biweekly Contest every other Saturday — 4 problems, 90 minutes each. Do these live once you're through week 3 of the plan below; even an unrated placement teaches you more than solo practice.", link:"https://leetcode.com/contest/" },
+  days:[
+    { topic:"Two pointers & sliding window", problems:[
+      {n:"Two Sum II — Input Array Is Sorted", d:"Easy", u:"https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/"},
+      {n:"Valid Palindrome", d:"Easy", u:"https://leetcode.com/problems/valid-palindrome/"}
+    ]},
+    { topic:"Two pointers & sliding window", problems:[
+      {n:"Container With Most Water", d:"Medium", u:"https://leetcode.com/problems/container-with-most-water/"},
+      {n:"Best Time to Buy and Sell Stock", d:"Easy", u:"https://leetcode.com/problems/best-time-to-buy-and-sell-stock/"}
+    ]},
+    { topic:"Sliding window & prefix sums", problems:[
+      {n:"Longest Substring Without Repeating Characters", d:"Medium", u:"https://leetcode.com/problems/longest-substring-without-repeating-characters/"},
+      {n:"Running Sum of 1d Array", d:"Easy", u:"https://leetcode.com/problems/running-sum-of-1d-array/"}
+    ]},
+    { topic:"Prefix sums → hashmaps", problems:[
+      {n:"Subarray Sum Equals K", d:"Medium", u:"https://leetcode.com/problems/subarray-sum-equals-k/"},
+      {n:"Two Sum", d:"Easy", u:"https://leetcode.com/problems/two-sum/"}
+    ]},
+    { topic:"Hashmaps & sets", problems:[
+      {n:"Group Anagrams", d:"Medium", u:"https://leetcode.com/problems/group-anagrams/"},
+      {n:"Contains Duplicate", d:"Easy", u:"https://leetcode.com/problems/contains-duplicate/"}
+    ]},
+    { topic:"Hashmaps & sets", problems:[
+      {n:"Top K Frequent Elements", d:"Medium", u:"https://leetcode.com/problems/top-k-frequent-elements/"},
+      {n:"Longest Consecutive Sequence", d:"Medium", u:"https://leetcode.com/problems/longest-consecutive-sequence/"}
+    ]},
+    { topic:"Linked lists", problems:[
+      {n:"Reverse Linked List", d:"Easy", u:"https://leetcode.com/problems/reverse-linked-list/"},
+      {n:"Merge Two Sorted Lists", d:"Easy", u:"https://leetcode.com/problems/merge-two-sorted-lists/"}
+    ]},
+    { topic:"Linked lists — fast/slow pointers", problems:[
+      {n:"Linked List Cycle", d:"Easy", u:"https://leetcode.com/problems/linked-list-cycle/"},
+      {n:"Remove Nth Node From End of List", d:"Medium", u:"https://leetcode.com/problems/remove-nth-node-from-end-of-list/"}
+    ]},
+    { topic:"Linked lists → stacks", problems:[
+      {n:"Reorder List", d:"Medium", u:"https://leetcode.com/problems/reorder-list/"},
+      {n:"Valid Parentheses", d:"Easy", u:"https://leetcode.com/problems/valid-parentheses/"}
+    ]},
+    { topic:"Stacks & monotonic stack", problems:[
+      {n:"Min Stack", d:"Medium", u:"https://leetcode.com/problems/min-stack/"},
+      {n:"Daily Temperatures", d:"Medium", u:"https://leetcode.com/problems/daily-temperatures/"}
+    ]},
+    { topic:"Queues → tree traversals", problems:[
+      {n:"Implement Queue using Stacks", d:"Easy", u:"https://leetcode.com/problems/implement-queue-using-stacks/"},
+      {n:"Binary Tree Inorder Traversal", d:"Easy", u:"https://leetcode.com/problems/binary-tree-inorder-traversal/"}
+    ]},
+    { topic:"Trees I — recursion basics", problems:[
+      {n:"Maximum Depth of Binary Tree", d:"Easy", u:"https://leetcode.com/problems/maximum-depth-of-binary-tree/"},
+      {n:"Invert Binary Tree", d:"Easy", u:"https://leetcode.com/problems/invert-binary-tree/"}
+    ]},
+    { topic:"Trees I → Trees II", problems:[
+      {n:"Same Tree", d:"Easy", u:"https://leetcode.com/problems/same-tree/"},
+      {n:"Validate Binary Search Tree", d:"Medium", u:"https://leetcode.com/problems/validate-binary-search-tree/"}
+    ]},
+    { topic:"Trees II — BST & BFS", problems:[
+      {n:"Lowest Common Ancestor of a BST", d:"Medium", u:"https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/"},
+      {n:"Binary Tree Level Order Traversal", d:"Medium", u:"https://leetcode.com/problems/binary-tree-level-order-traversal/"}
+    ]},
+    { topic:"Graphs — grid BFS/DFS", problems:[
+      {n:"Number of Islands", d:"Medium", u:"https://leetcode.com/problems/number-of-islands/"},
+      {n:"Clone Graph", d:"Medium", u:"https://leetcode.com/problems/clone-graph/"}
+    ]},
+    { topic:"Graphs → backtracking", problems:[
+      {n:"Course Schedule", d:"Medium", u:"https://leetcode.com/problems/course-schedule/"},
+      {n:"Subsets", d:"Medium", u:"https://leetcode.com/problems/subsets/"}
+    ]},
+    { topic:"Backtracking", problems:[
+      {n:"Permutations", d:"Medium", u:"https://leetcode.com/problems/permutations/"},
+      {n:"Combination Sum", d:"Medium", u:"https://leetcode.com/problems/combination-sum/"}
+    ]},
+    { topic:"Intro DP", problems:[
+      {n:"Climbing Stairs", d:"Easy", u:"https://leetcode.com/problems/climbing-stairs/"},
+      {n:"House Robber", d:"Medium", u:"https://leetcode.com/problems/house-robber/"}
+    ]}
+  ]
+},
+
+codechef: {
+  label:"CodeChef", key:"codechef",
+  contest:{ body:"Starters runs every Wednesday night (Div 1–4, pick your division by rating), Long Challenge is a 10-day monthly contest, Cook-Off and Lunchtime are monthly. Starters is the best low-pressure entry point once you finish this practice bank.", link:"https://www.codechef.com/contests" },
+  days:[
+    { topic:"I/O basics", problems:[
+      {n:"Life, the Universe, and Everything", d:"Easy", u:"https://www.codechef.com/problems/TEST"},
+      {n:"ATM", d:"Easy", u:"https://www.codechef.com/problems/HS08TEST"}
+    ]},
+    { topic:"Fast I/O", problems:[
+      {n:"Enormous Input Test", d:"Easy", u:"https://www.codechef.com/problems/INTEST"},
+      {n:"Add Two Numbers", d:"Easy", u:"https://www.codechef.com/problems/FLOW001"}
+    ]},
+    { topic:"Basic math", problems:[
+      {n:"Find Remainder", d:"Easy", u:"https://www.codechef.com/problems/FLOW002"},
+      {n:"First and Last Digit", d:"Easy", u:"https://www.codechef.com/problems/FLOW004"}
+    ]},
+    { topic:"Digits & number manipulation", problems:[
+      {n:"Sum of Digits", d:"Easy", u:"https://www.codechef.com/problems/FLOW006"},
+      {n:"Reverse The Number", d:"Easy", u:"https://www.codechef.com/problems/FLOW007"}
+    ]},
+    { topic:"Number theory basics", problems:[
+      {n:"Number Mirror", d:"Easy", u:"https://www.codechef.com/problems/START01"},
+      {n:"Small Factorials", d:"Easy", u:"https://www.codechef.com/problems/FCTRL2"}
+    ]},
+    { topic:"Number theory basics", problems:[
+      {n:"Factorial", d:"Easy", u:"https://www.codechef.com/problems/FCTRL"},
+      {n:"Finding Square Roots", d:"Easy", u:"https://www.codechef.com/problems/FSQRT"}
+    ]},
+    { topic:"Loops & sieve intro", problems:[
+      {n:"Lucky Four", d:"Easy", u:"https://www.codechef.com/problems/LUCKFOUR"},
+      {n:"Prime Generator", d:"Medium", u:"https://www.codechef.com/problems/PRIME1"}
+    ]},
+    { topic:"Sorting basics", problems:[
+      {n:"Turbo Sort", d:"Easy", u:"https://www.codechef.com/problems/TSORT"},
+      {n:"Discrepancies in the Voters List", d:"Easy", u:"https://www.codechef.com/problems/VOTERS"}
+    ]},
+    { topic:"Simple math & modulo", problems:[
+      {n:"Ciel and A-B Problem", d:"Easy", u:"https://www.codechef.com/problems/CIELAB"},
+      {n:"GCD2", d:"Easy", u:"https://www.codechef.com/problems/GCD2"}
+    ]},
+    { topic:"Simulation & greedy", problems:[
+      {n:"Carvans", d:"Medium", u:"https://www.codechef.com/problems/CARVANS"},
+      {n:"Cleaning Up", d:"Medium", u:"https://www.codechef.com/problems/CLEANUP"}
+    ]}
+  ]
+},
+
+codeforces: {
+  label:"Codeforces", key:"codeforces",
+  contest:{ body:"Div. 3 and Div. 4 rounds run roughly weekly and are built for exactly this rating range (unrated-1600) — start there. Div. 2 rounds are the next step once you're clearing 3-4 problems comfortably. Rounds are ~2 hours; always do the upsolving after.", link:"https://codeforces.com/contests" },
+  days:[
+    { topic:"Getting started (800)", problems:[
+      {n:"4A — Watermelon", d:"Easy", u:"https://codeforces.com/problemset/problem/4/A"},
+      {n:"1A — Theatre Square", d:"Easy", u:"https://codeforces.com/problemset/problem/1/A"}
+    ]},
+    { topic:"Strings & brute force (800)", problems:[
+      {n:"71A — Way Too Long Words", d:"Easy", u:"https://codeforces.com/problemset/problem/71/A"},
+      {n:"158A — Next Round", d:"Easy", u:"https://codeforces.com/problemset/problem/158/A"}
+    ]},
+    { topic:"Implementation (800)", problems:[
+      {n:"231A — Team", d:"Easy", u:"https://codeforces.com/problemset/problem/231/A"},
+      {n:"282A — Bit++", d:"Easy", u:"https://codeforces.com/problemset/problem/282/A"}
+    ]},
+    { topic:"Implementation (800)", problems:[
+      {n:"59A — Word", d:"Easy", u:"https://codeforces.com/problemset/problem/59/A"},
+      {n:"339A — Helpful Maths", d:"Easy", u:"https://codeforces.com/problemset/problem/339/A"}
+    ]},
+    { topic:"Implementation (900)", problems:[
+      {n:"96A — Football", d:"Easy", u:"https://codeforces.com/problemset/problem/96/A"},
+      {n:"112A — Petya and Strings", d:"Easy", u:"https://codeforces.com/problemset/problem/112/A"}
+    ]},
+    { topic:"Implementation (800)", problems:[
+      {n:"50A — Domino Piling", d:"Easy", u:"https://codeforces.com/problemset/problem/50/A"},
+      {n:"281A — Word Capitalization", d:"Easy", u:"https://codeforces.com/problemset/problem/281/A"}
+    ]},
+    { topic:"Strings & matrices (1000)", problems:[
+      {n:"118A — String Task", d:"Medium", u:"https://codeforces.com/problemset/problem/118/A"},
+      {n:"263A — Beautiful Matrix", d:"Medium", u:"https://codeforces.com/problemset/problem/263/A"}
+    ]},
+    { topic:"Greedy & number theory (1300)", problems:[
+      {n:"189A — Cut Ribbon", d:"Medium", u:"https://codeforces.com/problemset/problem/189/A"},
+      {n:"230B — T-primes", d:"Medium", u:"https://codeforces.com/problemset/problem/230/B"}
+    ]}
+  ]
+},
+
+hackerrank: {
+  label:"HackerRank", key:"hackerrank",
+  contest:{ body:"HackerRank's contests are less of a weekly ritual and more ad-hoc (company-sponsored challenges, domain-specific contests). Its real value here is the Interview Preparation Kit — treat the problems below as that kit's warmup/arrays/hashmap sections.", link:"https://www.hackerrank.com/contests" },
+  days:[
+    { topic:"Warmup", problems:[
+      {n:"Sock Merchant", d:"Easy", u:"https://www.hackerrank.com/challenges/sock-merchant/problem"},
+      {n:"Counting Valleys", d:"Easy", u:"https://www.hackerrank.com/challenges/counting-valleys/problem"}
+    ]},
+    { topic:"Warmup", problems:[
+      {n:"Jumping on the Clouds", d:"Easy", u:"https://www.hackerrank.com/challenges/jumping-on-the-clouds/problem"},
+      {n:"Repeated String", d:"Easy", u:"https://www.hackerrank.com/challenges/repeated-string/problem"}
+    ]},
+    { topic:"Dictionaries & hashmaps", problems:[
+      {n:"Hash Tables: Ransom Note", d:"Easy", u:"https://www.hackerrank.com/challenges/ctci-ransom-note/problem"},
+      {n:"Two Strings", d:"Easy", u:"https://www.hackerrank.com/challenges/two-strings/problem"}
+    ]},
+    { topic:"Arrays & greedy", problems:[
+      {n:"Bon Appétit", d:"Easy", u:"https://www.hackerrank.com/challenges/bon-appetit/problem"},
+      {n:"Electronics Shop", d:"Easy", u:"https://www.hackerrank.com/challenges/electronics-shop/problem"}
+    ]},
+    { topic:"Greedy", problems:[
+      {n:"Cats and a Mouse", d:"Easy", u:"https://www.hackerrank.com/challenges/cats-and-a-mouse/problem"},
+      {n:"The Hurdle Race", d:"Easy", u:"https://www.hackerrank.com/challenges/the-hurdle-race/problem"}
+    ]},
+    { topic:"Strings & simulation", problems:[
+      {n:"Designer PDF Viewer", d:"Easy", u:"https://www.hackerrank.com/challenges/designer-pdf-viewer/problem"},
+      {n:"Utopian Tree", d:"Easy", u:"https://www.hackerrank.com/challenges/utopian-tree/problem"}
+    ]},
+    { topic:"Math & implementation", problems:[
+      {n:"Angry Professor", d:"Easy", u:"https://www.hackerrank.com/challenges/angry-professor/problem"},
+      {n:"Find Digits", d:"Easy", u:"https://www.hackerrank.com/challenges/find-digits/problem"}
+    ]}
+  ]
+}
+};
+
+const TRACK_ORDER = ["leetcode","codechef","codeforces","hackerrank"];
+
+const CONCEPTS = [
+  { t:"Expected Value & Linearity", b:"E[X+Y] = E[X]+E[Y] always holds, even when X and Y are dependent. This single fact solves a huge fraction of 'expected count' puzzles — break the count into indicator variables, take E[] of each, sum. No need to model correlations." },
+  { t:"Bayes' Theorem", b:"P(A|B) = P(B|A)P(A) / P(B). Read it as: start with a prior on A, update using how likely the evidence B is under each hypothesis. Most 'trick' probability interview questions (Monty Hall, false-positive test results) are Bayes in disguise." },
+  { t:"Combinatorics core", b:"nCr = n!/(r!(n-r)!) for unordered choices, nPr = n!/(n-r)! for ordered ones. Stars-and-bars (C(n+k-1, k-1)) counts ways to split n identical items into k groups — useful for 'how many ways to distribute' questions." },
+  { t:"Common distributions", b:"Binomial: n independent yes/no trials. Poisson: rare events over a continuous interval, mean = variance = λ. Normal: sums of many small independent effects (CLT). Uniform: no information beyond a range. Knowing which applies is half the battle." },
+  { t:"Random walks & gambler's ruin", b:"A fair random walk that stops at 0 or N, starting at k, hits N first with probability k/N. This closed form shows up constantly in 'probability of ruin/success' framing — memorize it rather than re-deriving each time." },
+  { t:"Market making basics", b:"A market maker quotes a bid and ask around fair value and profits from the spread — but loses to informed traders who only hit one side (adverse selection). Wider spreads reduce adverse-selection risk but lose volume; this trade-off is the crux of most market-making interview questions." },
+  { t:"Mental math shortcuts", b:"Squares near a round number: (a+b)(a-b) = a²-b², e.g. 37×43 = 40²-3² = 1591. Percentages: 15% of X = 10% + 5% (half of 10%). Multiplying by 5 = multiply by 10, halve. Practicing these under time pressure is a real, testable skill." },
+  { t:"Risk-neutral EV framing", b:"For a bet or quote, compute EV = Σ(probability × payoff) across outcomes, then ask if EV is positive after costs. Quant interviews often just want you to set this sum up correctly and fast, not solve exotic math." }
 ];
 
-const TOTAL = DAYS.reduce((s,day)=>s+day.problems.length, 0);
+const PUZZLES = [
+  { tag:"Timing", name:"Two Ropes, One Hour", solved:false,
+    prompt:"You have two ropes. Each takes exactly 1 hour to burn end-to-end, but burns unevenly along its length (so the halfway point isn't necessarily reached at 30 minutes). You have a lighter. Measure exactly 45 minutes.",
+    answer:"Light rope A at both ends and rope B at one end, at the same time. Because A is burning from both ends, the two flames meet after exactly 30 minutes, no matter how unevenly it burns (the two burning segments always sum to the full rope). The instant A finishes, light the other end of B too. B now has 30 minutes of unburned rope left, but burning from both ends finishes it in 15 minutes. Total: 30 + 15 = 45 minutes." },
+  { tag:"Logic", name:"25 Horses, 5 Lanes", solved:false,
+    prompt:"You have 25 horses and a track that races 5 at a time with no stopwatch — you only learn the finishing order of each race. Find the top 3 fastest horses in the minimum number of races.",
+    answer:"7 races. Run 5 heats of 5 horses each (races 1-5). Race the 5 winners against each other (race 6) — this ranks the 5 'group champions.' Now use what race 6 revealed to eliminate horses who can't possibly be in the top 3 (e.g. anyone who finished 4th/5th in their heat, or was beaten by two horses that are themselves beaten by the overall fastest, etc.), leaving exactly 3 candidates for 2nd and 3rd place overall. Race those 3 in a 7th race to settle the final order." },
+  { tag:"Logic", name:"12 Balls, One Odd Weight", solved:false,
+    prompt:"You have 12 identical-looking balls. One is a different weight (could be heavier or lighter — you don't know which). Using a balance scale only 3 times, find the odd ball and whether it's heavier or lighter.",
+    answer:"Split into three groups of 4. Weigh group A vs group B. If balanced, the odd ball is in group C — weigh 3 known-good balls against 3 of group C to narrow it, then compare the last two if needed. If A and B don't balance, the odd ball is among those 8, and you know which side is 'heavy' — regroup a mix of suspected-heavy, suspected-light, and known-good balls in the second weighing to split the remaining candidates, then confirm with the third weighing. The core idea: each weighing has 3 outcomes, so 3 weighings distinguish up to 27 possibilities — exactly enough for 12 balls × 2 (heavier/lighter) = 24 cases." },
+  { tag:"Probability", name:"Monty Hall", solved:false,
+    prompt:"Three doors: one has a car, two have goats. You pick a door. The host, who knows what's behind each door, opens a different door revealing a goat. Should you switch to the remaining door?",
+    answer:"Yes — switching wins the car 2/3 of the time, staying wins 1/3. Your first pick has a 1/3 chance of being the car and a 2/3 chance of being a goat. The host's action never changes your original door's odds — but if you'd picked a goat (2/3 of the time), the host is forced to reveal the other goat, leaving the car behind the remaining door. So the remaining door inherits that 2/3 probability." },
+  { tag:"Probability", name:"Birthday Paradox", solved:false,
+    prompt:"How many people need to be in a room before there's better than 50% odds that two of them share a birthday?",
+    answer:"Just 23. It's easier to compute the complement: the probability all birthdays are distinct is (365/365)(364/365)(363/365)...(343/365) for 23 people, which multiplies out to about 49.3% — so the chance of at least one shared birthday is about 50.7%. The result feels too small because we intuitively compare against one specific birthday, but there are C(23,2)=253 pairs being checked." },
+  { tag:"Probability", name:"Ants on a Triangle", solved:false,
+    prompt:"Three ants sit at the three corners of a triangle. Each independently picks one of the two edges touching its corner and walks along it, at the same speed. What's the probability no two ants collide?",
+    answer:"1/4. Each ant independently goes 'clockwise' or 'counterclockwise' along the triangle, so there are 2×2×2 = 8 equally likely combinations. A collision is avoided only if all three ants rotate the same way (all clockwise, or all counterclockwise) — 2 of the 8 outcomes. 2/8 = 1/4." },
+  { tag:"Expected Value", name:"HH vs HT", solved:false,
+    prompt:"You flip a fair coin repeatedly. On average, how many flips until you see the pattern HH? How many until you see HT? (They're not the same — why?)",
+    answer:"E[HT] = 4 flips. E[HH] = 6 flips. For HT: once you get a single H, every subsequent flip either completes the pattern (T) or you're still 'in the H state' (another H) — it can't undo the progress. For HH: if you have one H and then flip a T, you're fully reset to zero progress. That reset possibility is what drags HH's expectation up above HT's, even though both are 2-flip patterns on a fair coin." },
+  { tag:"Probability", name:"Two Envelopes Paradox", solved:false,
+    prompt:"Two envelopes, one has twice as much money as the other. You pick one, open it, see amount X. The 'switching' argument says: the other envelope has either X/2 or 2X, each with probability 1/2, so its expected value is 1.25X — always switch. What's wrong with this reasoning?",
+    answer:"The error is treating 'the other envelope is 2X or X/2, each with probability 1/2' as valid regardless of X, without a real prior over the amounts. Once you fix a sensible prior (say, the smaller envelope's amount is drawn from some distribution), the 1/2-1/2 split stops being uniform across all X, and the naive 1.25X expectation no longer holds — the paradox is a symptom of implicitly assuming an improper (non-normalizable) prior over all possible amounts." },
+  { tag:"Probability", name:"Fair Coin from a Biased Coin", solved:false,
+    prompt:"You have a coin that lands heads with unknown probability p (not necessarily 0.5). Using only this coin, produce a fair 50/50 result.",
+    answer:"Flip the coin twice. If you get HT, call the result 'heads'; if you get TH, call it 'tails'; if you get HH or TT, discard and repeat. P(HT) = p(1-p) = P(TH), so conditional on getting a decisive pair, it's exactly 50/50 regardless of p. This is von Neumann's unbiasing trick." },
+  { tag:"Expected Value", name:"St. Petersburg Paradox", solved:false,
+    prompt:"A casino game: flip a fair coin until it lands tails. If it takes n flips, you win 2^n dollars. What's the fair price to pay to play this game? Compute the expected payout.",
+    answer:"The expected payout is infinite: E = Σ (1/2^n)(2^n) for n=1 to ∞ = Σ 1 = ∞. Yet almost nobody would pay even $100 to play — real people (and real market makers) discount huge, low-probability payouts because of diminishing marginal utility of money and the practical impossibility of a counterparty who can actually pay out 2^30 dollars. The puzzle is a classic illustration of why 'maximize EV' isn't the whole story once tail risk and counterparty limits enter the picture." },
+  { tag:"Logic", name:"Handshake at a Party", solved:false,
+    prompt:"At a party of n≥2 people, some shook hands with others (never with themselves, never twice with the same person). Prove there must always be at least two people who shook the same number of hands.",
+    answer:"Each person's handshake count is between 0 and n-1 — that's n possible values for n people. But 0 and n-1 can't both occur (the person who shook n-1 hands shook everyone's, including the person with 0) — so really only n-1 values are jointly available. By pigeonhole, with n people and at most n-1 distinct counts available, two people must share a count." },
+  { tag:"Logic", name:"Prisoners & the Light Switch", solved:false,
+    prompt:"100 prisoners are told: you'll each be sent alone into a room with a light switch (currently off), infinitely often, in some order chosen by the warden — no pattern guaranteed. Any prisoner can declare 'we've all been in the room at least once,' and if correct, everyone goes free; if wrong, everyone stays forever. They can meet once beforehand to agree on a strategy. Devise one that guarantees eventual freedom.",
+    answer:"Designate one prisoner as 'the counter.' Every other prisoner follows this rule: the first time they enter the room and find the switch off, they turn it on — and never touch it again on any later visit. The counter's rule: every time they enter and find the switch on, they turn it off and increment a mental tally; when their tally reaches 99, they declare victory. Since each of the other 99 prisoners contributes exactly one 'on' flip over the course of the process, the counter reaching 99 flips-to-off guarantees all 99 others have visited at least once." },
+  { tag:"Logic", name:"9 Coins, One Fake", solved:false,
+    prompt:"9 coins look identical, but one is fake and slightly lighter than the rest. Using a balance scale twice, find the fake.",
+    answer:"Split into three groups of 3. Weigh group A vs group B. If they balance, the fake is in group C; otherwise it's in the lighter of A/B. That narrows it to 3 coins in one weighing. Take those 3 suspect coins, weigh any one against another: if they balance, the untested third coin is fake; otherwise the lighter one is fake." },
+  { tag:"Mental Math", name:"Fast: 37 × 43", solved:false,
+    prompt:"Compute 37 × 43 in your head, fast — no long multiplication.",
+    answer:"Both numbers are 3 away from 40, on opposite sides: 37 = 40-3, 43 = 40+3. So 37×43 = (40-3)(40+3) = 40² - 3² = 1600 - 9 = 1591. Difference-of-squares is the single most useful mental-math trick for two numbers that straddle a round midpoint." },
+  { tag:"Estimation", name:"Fermi: Piano Tuners in a City", solved:false,
+    prompt:"Estimate the number of piano tuners working in a city of about 5 million people. You don't need to be exact — show the reasoning chain a quant/consulting interviewer wants to see.",
+    answer:"Chain it: ~5M people → roughly 2M households → maybe 1 in 20 households owns a piano → ~100,000 pianos in the city. Each piano needs tuning roughly once a year, so ~100,000 tuning-jobs/year. A tuner can do maybe 4 tunings/day, ~250 working days/year → ~1,000 tunings per tuner per year. 100,000 / 1,000 = about 100 piano tuners. The exact number matters far less than showing a clean, defensible chain of estimates — that's what's being graded." },
+  { tag:"Expected Value", name:"Coupon Collector (Dice)", solved:false,
+    prompt:"You roll a fair 6-sided die repeatedly. On average, how many rolls until you've seen all 6 faces at least once?",
+    answer:"About 14.7 rolls. This is the coupon collector's problem: going from having seen k distinct faces to k+1 takes an expected 6/(6-k) rolls (probability of a 'new' face is (6-k)/6). Summing for k=0..5: 6/6 + 6/5 + 6/4 + 6/3 + 6/2 + 6/1 = 6×(1 + 1/2 + 1/3 + 1/4 + 1/5 + 1/6) = 6×H₆ ≈ 6×2.45 ≈ 14.7." }
+];
+
+const CODING_TOTAL = TRACK_ORDER.reduce((s,k)=> s + TRACKS[k].days.reduce((a,d)=>a+d.problems.length,0), 0);
 let checked = {};
+let puzzleSolved = {};
 let startDate = null;
 let lastActiveDate = null;
 let streak = 0;
- 
-function pid(di, pi){ return di+'-'+pi; }
- 
-async function loadState(){
+let activeTab = "leetcode";
+const STORAGE_KEY = "sde-quant-prep-v1";
+
+function pid(track, di, pi){ return track+'-'+di+'-'+pi; }
+
+function loadState(){
   try{
-    const res = await window.storage.get('roadmap-progress-v2');
-    if(res && res.value){
-      const parsed = JSON.parse(res.value);
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
       checked = parsed.checked || {};
+      puzzleSolved = parsed.puzzleSolved || {};
       startDate = parsed.startDate || null;
       lastActiveDate = parsed.lastActiveDate || null;
       streak = parsed.streak || 0;
     }
-  }catch(e){ /* no saved state yet */ }
- 
+  }catch(e){ /* localStorage unavailable (private mode etc) — state stays in-memory this session */ }
+
   const today = new Date().toISOString().slice(0,10);
   if(!startDate){ startDate = today; }
   if(lastActiveDate !== today){
@@ -423,54 +718,79 @@ async function loadState(){
     const yStr = y.toISOString().slice(0,10);
     streak = (lastActiveDate === yStr) ? streak + 1 : (lastActiveDate ? 1 : 1);
     lastActiveDate = today;
-    saveState();
   }
+  saveState();
 }
- 
-async function saveState(){
+
+function saveState(){
   try{
-    await window.storage.set('roadmap-progress-v2', JSON.stringify({checked, startDate, lastActiveDate, streak}));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({checked, puzzleSolved, startDate, lastActiveDate, streak}));
   }catch(e){ /* storage unavailable, state stays in memory this session */ }
 }
 
-function phaseLabel(phase){
-  return phase === "leetcode" ? "PHASE 1 · LEETCODE FOUNDATIONS" : "PHASE 2 · CODECHEF PRACTICE";
+function resetState(){
+  if(!confirm("Reset all progress? This clears every checkmark and can't be undone.")) return;
+  checked = {}; puzzleSolved = {}; startDate = new Date().toISOString().slice(0,10);
+  lastActiveDate = startDate; streak = 1;
+  saveState();
+  renderAll();
 }
- 
-function render(){
-  const root = document.getElementById('phasesRoot');
-  root.innerHTML = '';
-  let currentPhase = null;
-  let dayCounter = 0;
 
-  DAYS.forEach((day, di)=>{
-    if(day.phase !== currentPhase){
-      currentPhase = day.phase;
-      const header = document.createElement('div');
-      header.className = 'phase-header';
-      header.innerHTML = `<span class="ptxt"><b>${phaseLabel(currentPhase)}</b></span><span class="line"></span>`;
-      root.appendChild(header);
-      const wrap = document.createElement('div');
-      wrap.className = 'days';
-      wrap.id = 'phase-'+currentPhase;
-      root.appendChild(wrap);
-    }
-    dayCounter++;
-    const container = document.getElementById('phase-'+currentPhase);
+function buildTabs(){
+  const bar = document.getElementById('tabbar');
+  bar.innerHTML = '';
+  TRACK_ORDER.forEach(key=>{
+    const track = TRACKS[key];
+    const total = track.days.reduce((a,d)=>a+d.problems.length,0);
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (activeTab===key ? ' active' : '');
+    btn.id = 'tabbtn-'+key;
+    btn.innerHTML = `${track.label} <span class="count" id="tabcount-${key}">0/${total}</span>`;
+    btn.onclick = ()=>{ activeTab = key; renderAll(); };
+    bar.appendChild(btn);
+  });
+  const qbtn = document.createElement('button');
+  qbtn.className = 'tab-btn' + (activeTab==='quant' ? ' active' : '');
+  qbtn.id = 'tabbtn-quant';
+  qbtn.innerHTML = `Quant <span class="count" id="tabcount-quant">0/${PUZZLES.length}</span>`;
+  qbtn.onclick = ()=>{ activeTab = 'quant'; renderAll(); };
+  bar.appendChild(qbtn);
+}
 
-    const solvedCount = day.problems.filter((_,pi)=>checked[pid(di,pi)]).length;
+function renderTrackPanel(key){
+  const track = TRACKS[key];
+  const panel = document.createElement('div');
+  panel.className = 'panel' + (activeTab===key ? ' active' : '');
+  panel.id = 'panel-'+key;
+
+  const cc = document.createElement('div');
+  cc.className = 'contest-card';
+  cc.innerHTML = `
+    <div class="cc-left">
+      <div class="cc-label">${track.label} · Contest Calendar</div>
+      <div class="cc-body">${track.contest.body}</div>
+    </div>
+    <a class="cc-link" href="${track.contest.link}" target="_blank" rel="noopener">view contests ↗</a>
+  `;
+  panel.appendChild(cc);
+
+  const daysWrap = document.createElement('div');
+  daysWrap.className = 'days';
+
+  track.days.forEach((day, di)=>{
+    const solvedCount = day.problems.filter((_,pi)=>checked[pid(key,di,pi)]).length;
     const pct = Math.round(100*solvedCount/day.problems.length);
- 
+
     const dayEl = document.createElement('div');
     dayEl.className = 'day';
-    dayEl.id = 'day-'+di;
- 
+    dayEl.id = `day-${key}-${di}`;
+
     const head = document.createElement('div');
     head.className = 'day-head';
     head.innerHTML = `
-      <div class="day-num">D${String(dayCounter).padStart(2,'0')}</div>
+      <div class="day-num">D${String(di+1).padStart(2,'0')}</div>
       <div class="day-title">
-        <div class="name">Day ${dayCounter}</div>
+        <div class="name">Day ${di+1}</div>
         <div class="topic">${day.topic}</div>
       </div>
       <div class="day-bar"><div class="day-bar-fill" style="width:${pct}%"></div></div>
@@ -479,17 +799,16 @@ function render(){
     `;
     head.onclick = ()=> dayEl.classList.toggle('open');
     dayEl.appendChild(head);
- 
+
     const probWrap = document.createElement('div');
     probWrap.className = 'problems';
     day.problems.forEach((p, pi)=>{
-      const id = pid(di,pi);
+      const id = pid(key,di,pi);
       const isChecked = !!checked[id];
       const row = document.createElement('div');
       row.className = 'problem';
       row.innerHTML = `
         <div class="check ${isChecked?'checked':''}" data-id="${id}"></div>
-        <div class="plat ${p.plat}">${p.plat}</div>
         <div class="p-name ${isChecked?'done':''}">${p.n}</div>
         <div class="diff ${p.d}">${p.d.toUpperCase()}</div>
         <a class="p-link" href="${p.u}" target="_blank" rel="noopener">open ↗</a>
@@ -498,67 +817,149 @@ function render(){
         e.stopPropagation();
         checked[id] = !checked[id];
         saveState();
-        render();
+        renderAll();
       };
       probWrap.appendChild(row);
     });
     dayEl.appendChild(probWrap);
-    container.appendChild(dayEl);
+    daysWrap.appendChild(dayEl);
   });
- 
-  // auto-open the first day with unfinished problems
-  const firstOpenIdx = DAYS.findIndex((d,di)=> d.problems.some((_,pi)=>!checked[pid(di,pi)]));
-  const targetIdx = firstOpenIdx === -1 ? 0 : firstOpenIdx;
-  const target = document.getElementById('day-'+targetIdx);
-  if(target) target.classList.add('open');
 
-  document.getElementById('tickPhase').textContent = phaseLabel(DAYS[targetIdx].phase);
- 
+  panel.appendChild(daysWrap);
+
+  const firstOpenIdx = track.days.findIndex((d,di)=> d.problems.some((_,pi)=>!checked[pid(key,di,pi)]));
+  const targetIdx = firstOpenIdx === -1 ? 0 : firstOpenIdx;
+  const targetEl = daysWrap.querySelector(`#day-${key}-${targetIdx}`);
+  if(targetEl) targetEl.classList.add('open');
+
+  return panel;
+}
+
+function renderQuantPanel(){
+  const panel = document.createElement('div');
+  panel.className = 'panel' + (activeTab==='quant' ? ' active' : '');
+  panel.id = 'panel-quant';
+
+  const label1 = document.createElement('div');
+  label1.className = 'section-label';
+  label1.textContent = 'CORE CONCEPTS';
+  panel.appendChild(label1);
+
+  const grid = document.createElement('div');
+  grid.className = 'concept-grid';
+  CONCEPTS.forEach(c=>{
+    const card = document.createElement('div');
+    card.className = 'concept-card';
+    card.innerHTML = `<div class="ct">${c.t}</div><div class="cb">${c.b}</div>`;
+    grid.appendChild(card);
+  });
+  panel.appendChild(grid);
+
+  const label2 = document.createElement('div');
+  label2.className = 'section-label';
+  label2.textContent = 'PUZZLE BANK — try before you reveal';
+  panel.appendChild(label2);
+
+  PUZZLES.forEach((p)=>{
+    const isSolved = !!puzzleSolved[p.name];
+    const card = document.createElement('div');
+    card.className = 'puzzle' + (isSolved ? ' solved' : '');
+    card.innerHTML = `
+      <div class="puzzle-head">
+        <div class="check ${isSolved?'checked':''}" data-puzzle="${p.name}"></div>
+        <div class="puzzle-tag">${p.tag}</div>
+        <div class="puzzle-prompt">
+          <span class="pname">${p.name}</span>
+          ${p.prompt}
+          <div><button class="reveal-btn">reveal answer</button></div>
+          <div class="puzzle-answer">${p.answer}</div>
+        </div>
+      </div>
+    `;
+    card.querySelector('.check').onclick = ()=>{
+      puzzleSolved[p.name] = !puzzleSolved[p.name];
+      saveState();
+      renderAll();
+    };
+    card.querySelector('.reveal-btn').onclick = (e)=>{
+      const ans = card.querySelector('.puzzle-answer');
+      ans.classList.toggle('shown');
+      e.target.textContent = ans.classList.contains('shown') ? 'hide answer' : 'reveal answer';
+    };
+    panel.appendChild(card);
+  });
+
+  return panel;
+}
+
+function renderAll(){
+  buildTabs();
+
+  const root = document.getElementById('panelsRoot');
+  root.innerHTML = '';
+  TRACK_ORDER.forEach(key=> root.appendChild(renderTrackPanel(key)));
+  root.appendChild(renderQuantPanel());
+
   updateStats();
   drawChart();
 }
- 
+
 function updateStats(){
-  const solvedTotal = Object.values(checked).filter(Boolean).length;
-  const pctTotal = Math.round(100*solvedTotal/TOTAL);
-  const currentDayIdx = DAYS.findIndex((d,di)=> d.problems.some((_,pi)=>!checked[pid(di,pi)]));
-  const dayDisplay = currentDayIdx === -1 ? DAYS.length : currentDayIdx+1;
- 
-  const day = startDate ? Math.max(1, Math.floor((new Date()-new Date(startDate))/86400000)+1) : 1;
- 
-  document.getElementById('tickDay').textContent = 'DAY ' + String(day).padStart(3,'0');
-  document.getElementById('tickProgress').textContent = 'SOLVED ' + solvedTotal + '/' + TOTAL;
-  document.getElementById('graphVal').textContent = pctTotal + '%';
+  let solvedTotal = 0;
+  TRACK_ORDER.forEach(key=>{
+    const track = TRACKS[key];
+    let trackSolved = 0;
+    track.days.forEach((day,di)=> day.problems.forEach((_,pi)=>{ if(checked[pid(key,di,pi)]){ trackSolved++; solvedTotal++; } }));
+    const el = document.getElementById('tabcount-'+key);
+    if(el){
+      const total = track.days.reduce((a,d)=>a+d.problems.length,0);
+      el.textContent = trackSolved+'/'+total;
+    }
+  });
+
+  const puzzlesSolvedCount = Object.values(puzzleSolved).filter(Boolean).length;
+  const qel = document.getElementById('tabcount-quant');
+  if(qel) qel.textContent = puzzlesSolvedCount+'/'+PUZZLES.length;
+
+  const dayNum = startDate ? Math.max(1, Math.floor((new Date()-new Date(startDate))/86400000)+1) : 1;
+
+  document.getElementById('tickDay').textContent = 'DAY ' + String(dayNum).padStart(3,'0');
+  document.getElementById('tickProgress').textContent = 'SOLVED ' + solvedTotal + '/' + CODING_TOTAL;
+  document.getElementById('graphVal').textContent = Math.round(100*solvedTotal/CODING_TOTAL) + '%';
   document.getElementById('statSolved').textContent = solvedTotal;
   document.getElementById('statStreak').textContent = streak;
-  document.getElementById('statDay').textContent = dayDisplay;
-  document.getElementById('statRemain').textContent = TOTAL - solvedTotal;
+  document.getElementById('statRemain').textContent = CODING_TOTAL - solvedTotal;
+  document.getElementById('statPuzzles').textContent = puzzlesSolvedCount+'/'+PUZZLES.length;
 }
- 
+
 function drawChart(){
   const svg = document.getElementById('ratingChart');
-  const W = 860, H = 150, pad = 10;
-  let cum = 0;
-  const points = [ {x:0, y:0} ];
-  DAYS.forEach((day, di)=>{
-    day.problems.forEach((_, pi)=>{
-      if(checked[pid(di,pi)]) cum++;
-    });
-    points.push({x: (di+1)/DAYS.length, y: cum/TOTAL});
+  const W = 860, H = 140, pad = 10;
+
+  const flat = [];
+  TRACK_ORDER.forEach(key=>{
+    TRACKS[key].days.forEach((day,di)=> day.problems.forEach((_,pi)=> flat.push(pid(key,di,pi))));
   });
- 
+
+  let cum = 0;
+  const points = [{x:0,y:0}];
+  flat.forEach((id, i)=>{
+    if(checked[id]) cum++;
+    points.push({x:(i+1)/flat.length, y:cum/CODING_TOTAL});
+  });
+
   const coords = points.map(p=>{
     const x = pad + p.x*(W-2*pad);
     const y = H-pad - p.y*(H-2*pad);
     return [x,y];
   });
- 
+
   let path = 'M ' + coords[0][0] + ' ' + coords[0][1];
   for(let i=1;i<coords.length;i++){ path += ' L ' + coords[i][0] + ' ' + coords[i][1]; }
- 
+
   const areaPath = path + ` L ${coords[coords.length-1][0]} ${H-pad} L ${coords[0][0]} ${H-pad} Z`;
   const last = coords[coords.length-1];
- 
+
   svg.innerHTML = `
     <defs>
       <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
@@ -573,12 +974,15 @@ function drawChart(){
     <circle cx="${last[0]}" cy="${last[1]}" r="9" fill="#2ED573" opacity="0.25"/>
   `;
 }
- 
-(async ()=>{
-  await loadState();
-  render();
-})();
+
+document.getElementById('resetBtn').onclick = resetState;
+
+loadState();
+renderAll();
 </script>
+
+</body>
+</html>
  
 </body>
 </html>
